@@ -43,7 +43,7 @@ cd credito
 
 2. Execute o ambiente com Docker Compose:
 ```bash
-docker-compose up -d
+docker compose up --build -d
 ```
 
 Este comando irá:
