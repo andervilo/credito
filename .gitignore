@@ -1,0 +1,58 @@
+# Angular (Frontend)
+/credito-web/dist
+/credito-web/tmp
+/credito-web/.angular
+/credito-web/node_modules
+/credito-web/.npm
+/credito-web/coverage
+/credito-web/.idea
+/credito-web/.project
+/credito-web/.classpath
+/credito-web/.c9/
+/credito-web/*.launch
+/credito-web/.settings/
+/credito-web/*.sublime-workspace
+/credito-web/.vscode/*
+/credito-web/!.vscode/settings.json
+/credito-web/!.vscode/tasks.json
+/credito-web/!.vscode/launch.json
+/credito-web/!.vscode/extensions.json
+/credito-web/.history/*
+/credito-web/.DS_Store
+/credito-web/Thumbs.db
+
+# Spring Boot (Backend)
+/credito-ms/target/
+/credito-ms/!.mvn/wrapper/maven-wrapper.jar
+/credito-ms/!**/src/main/**/target/
+/credito-ms/!**/src/test/**/target/
+
+# IDE - Spring Boot
+/credito-ms/.apt_generated
+/credito-ms/.classpath
+/credito-ms/.factorypath
+/credito-ms/.project
+/credito-ms/.settings
+/credito-ms/.springBeans
+/credito-ms/.sts4-cache
+/credito-ms/.idea
+/credito-ms/*.iws
+/credito-ms/*.iml
+/credito-ms/*.ipr
+/credito-ms/nbproject/private/
+/credito-ms/nbbuild/
+/credito-ms/dist/
+/credito-ms/nbdist/
+/credito-ms/.nb-gradle/
+/credito-ms/build/
+/credito-ms/!**/src/main/**/build/
+/credito-ms/!**/src/test/**/build/
+
+# Logs
+*.log
+logs/
+/credito-ms/logs/
+
+# System Files
+.DS_Store
+Thumbs.db
