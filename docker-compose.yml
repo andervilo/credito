@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  postgres-credito:
+    image: postgres:16.0
+    container_name: postgres-credito
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: creditosdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - credito-network
+
+  zookeeper-credito:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper-credito
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - credito-network
+
+  kafka-credito:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka-credito
+    depends_on:
+      - zookeeper-credito
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-credito:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka-credito:29092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - credito-network
+
+  kafka-ui-credito:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui-credito
+    ports:
+      - "8090:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka-credito:29092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper-credito:2181
+    depends_on:
+      - kafka-credito
+      - zookeeper-credito
+    networks:
+      - credito-network
+
+  credito-ms:
+    build:
+      context: ./credito-ms
+      dockerfile: Dockerfile
+    container_name: credito-ms
+    depends_on:
+      - postgres-credito
+      - kafka-credito
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-credito:5432/creditosdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-credito:29092
+    ports:
+      - "8080:8080"
+    networks:
+      - credito-network
+
+  credito-web:
+    build:
+      context: ./credito-web
+      dockerfile: Dockerfile
+    container_name: credito-web
+    depends_on:
+      - credito-ms
+    ports:
+      - "4200:4200"
+    networks:
+      - credito-network
+
+volumes:
+  postgres_data:
+
+networks:
+  credito-network:
+    driver: bridge
