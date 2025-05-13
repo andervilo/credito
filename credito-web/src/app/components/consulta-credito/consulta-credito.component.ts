@@ -22,6 +22,10 @@ import { Credito } from '../../models/credito.model';
           <input type="text" [(ngModel)]="numeroNfse" placeholder="Número da NFSe">
           <button (click)="buscarPorNfse()">Buscar por NFSe</button>
         </div>
+
+        <div class="search-group">
+          <button (click)="limparFormulario()">Limpar</button>
+        </div>
       </div>
 
       <div *ngIf="creditos.length > 0" class="results">
@@ -130,6 +134,13 @@ export class ConsultaCreditoComponent {
   erro = '';
 
   constructor(private creditoService: CreditoService) {}
+
+  limparFormulario() {
+    this.numeroCredito = '';
+    this.numeroNfse = '';
+    this.creditos = [];
+    this.erro = '';
+  }
 
   buscarPorCredito() {
     if (!this.numeroCredito.trim()) {
